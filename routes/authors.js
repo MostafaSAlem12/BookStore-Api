@@ -4,6 +4,10 @@ const asyncHandler = require("express-async-handler");
 const { Author, validateCreateAuthor, validateUpdateAuthor } = require("../models/Author")
 
 
+
+// router.get('/', (req, res) => {
+//   res.send('Welcome in authors section')
+// })
 /**
  * @des Get all authors
  * @route /api/authors
