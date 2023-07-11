@@ -10,7 +10,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Connected To MongoDB..."))
   .catch((error) => console.log("Connection Failed To MongoDB!", error))
-//init appeed
+//init App
 const app = express();
 
 // Apply Middlewares
