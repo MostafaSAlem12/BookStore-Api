@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
 const { User, validateRegisterUser, validateLoginUser } = require("../models/User");
+const bcrypt = require("bcryptjs")
 
 
 /**
@@ -20,6 +21,10 @@ router.post('/register', asyncHandler(async (req, res) => {
   if (user) {
     res.status(400).json({ message: "this user already registered" })
   }
+
+  //Hashing password 
+  const salt = await bcrypt.genSalt(10);
+  req.body.password = await bcrypt.hash(req.body.password, salt)
   user = new User({
     email: req.body.email,
     username: req.body.username,
@@ -28,7 +33,9 @@ router.post('/register', asyncHandler(async (req, res) => {
   });
 
   const result = await user.save();
-  res.status(201).json(result);
+  const token = null;
+  const { password, ...other } = result._doc;
+  res.status(201).json({ ...other, token });
 }))
 
 
