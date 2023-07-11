@@ -4,9 +4,9 @@ const notFound = (req, res, next) => {
   res.status(404);
   next(error);
 };
-const errHandle = (err, req, res, next) => {
+const errHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({ message: err.message });
 };
 
-module.exports = { notFound, errHandle };
+module.exports = { notFound, errHandler };
