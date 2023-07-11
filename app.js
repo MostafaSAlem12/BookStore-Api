@@ -1,6 +1,7 @@
 const express = require("express");
 const booksPath = require("./routes/books");
 const authorsPath = require("./routes/authors");
+const logger = require('./middlewares/logger')
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config()
@@ -15,6 +16,8 @@ const app = express();
 
 // Apply Middlewares
 app.use(express.json());
+
+app.use(logger)
 
 //Routes 
 app.get('/', (req, res) => {
