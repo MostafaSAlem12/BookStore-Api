@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
   },
   isAdmin: {
     type: Boolean,
-    dafult: false
+    default: false
   }
 },
   {
@@ -70,9 +70,7 @@ function validateUpdateUser(obj) {
     username:
       Joi.string().trim().min(2).max(200),
     password:
-      Joi.string().trim().min(6),
-    isAdmin:
-      Joi.boolean(),
+      Joi.string().trim().min(6)
   });
   return schema.validate(obj);
 }

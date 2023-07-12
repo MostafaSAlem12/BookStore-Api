@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 const { User, validateRegisterUser, validateLoginUser } = require("../models/User");
 
 
