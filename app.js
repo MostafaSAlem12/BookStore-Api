@@ -1,36 +1,31 @@
 const express = require("express");
-const booksPath = require("./routes/books");
-const authorsPath = require("./routes/authors");
-const usersPath = require("./routes/users");
-const authPath = require("./routes/auth");
 const logger = require('./middlewares/logger')
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const connectToDB =require('./config/db')
+require("dotenv").config();
 const { notFound, errHandler } = require("./middlewares/errors");
-dotenv.config()
+const { setRandomFallback } = require("bcryptjs");
 
 //connection to Database
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected To MongoDB..."))
-  .catch((error) => console.log("Connection Failed To MongoDB!", error))
+connectToDB();
+
 //init App
 const app = express();
 
 // Apply Middlewares
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 app.use(logger);
-
-
+app.set('view engine','ejs')
 
 //Routes 
 app.get('/', (req, res) => {
   res.send("WELCOME IN BOOKstore API  ")
 })
-app.use("/api/books", booksPath)
-app.use("/api/authors", authorsPath)
-app.use("/api/auth", authPath)
-app.use("/api/users", usersPath)
+app.use("/api/books", require("./routes/books"))
+app.use("/api/authors", require("./routes/authors"))
+app.use("/api/auth", require("./routes/auth"))
+app.use("/api/users", require("./routes/users"))
+app.use("/password",require('./routes/password'));
 
 // Error Handling
 app.use(notFound);
