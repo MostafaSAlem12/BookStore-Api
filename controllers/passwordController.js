@@ -21,7 +21,6 @@ module.exports.getForgotPasswordView = asyncHandler((req, res) => {
  */
 
 module.exports.sendForgotPasswordLink = asyncHandler(async (req, res) => {
-    console.log(req.body.email);
     const user = await User.findOne({ email: req.body.email })
     if (!user) {
         return res.status(404).json({ message: 'User Not Found' })
@@ -30,7 +29,7 @@ module.exports.sendForgotPasswordLink = asyncHandler(async (req, res) => {
     const token = jwt.sign({ email: user.email, id: user.id }, secret, { expiresIn: '10m' })
 
 
-    const link = `http://localhost:5000/password/reset-password/${User._id}/${token}`;
+    const link = `http://localhost:5000/password/reset-password/${user._id}/${token}`;
 
     res.json({ message: 'Click on the link', resetPasswordLink: link })
 
@@ -38,14 +37,14 @@ module.exports.sendForgotPasswordLink = asyncHandler(async (req, res) => {
 })
 
 /**
- * @desc Get Reset password link
+ * @desc Get Reset password View
  * @route /password/reset-password/:userId/token
  * @method GET
  * @access public
  */
 
 module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
-    console.log(req.body.email);
+    // console.log(req.body.email);
     const user = await User.findById(req.params.userId)
     if (!user) {
         return res.status(404).json({ message: 'User Not Found' })
@@ -59,10 +58,6 @@ module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
         res.json({ message: "error" });
 
     }
-
-    const link = `http://localhost:5000/password/reset-password/${User._id}/${token}`;
-
-    res.json({ message: 'Click on the link', resetPasswordLink: link })
 })
 
 
@@ -73,7 +68,7 @@ module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
  * @access public
  */
 
-module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
+module.exports.resetThePassword = asyncHandler(async (req, res) => {
     // TODO : validation
     const user = await User.findById(req.params.userId)
     if (!user) {
@@ -92,10 +87,5 @@ module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
     } catch (error) {
         console.log(error);
         res.json({ message: "error" });
-
     }
-
-    const link = `http://localhost:5000/password/reset-password/${User._id}/${token}`;
-
-    res.json({ message: 'Click on the link', resetPasswordLink: link })
 })
