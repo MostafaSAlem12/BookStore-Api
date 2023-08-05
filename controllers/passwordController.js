@@ -64,3 +64,38 @@ module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
 
     res.json({ message: 'Click on the link', resetPasswordLink: link })
 })
+
+
+/**
+ * @desc Reset the password
+ * @route /password/reset-password/:userId/token
+ * @method POST
+ * @access public
+ */
+
+module.exports.getResetPasswordView = asyncHandler(async (req, res) => {
+    // TODO : validation
+    const user = await User.findById(req.params.userId)
+    if (!user) {
+        return res.status(404).json({ message: 'User Not Found' })
+    }
+    const secret = process.env.JWT_SECRET_KEY + user.password;
+    try {
+        jwt.verify(req.params.token, secret);
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+        user.password = req.body.password;
+
+        await user.save();
+        res.render('success-password');
+
+    } catch (error) {
+        console.log(error);
+        res.json({ message: "error" });
+
+    }
+
+    const link = `http://localhost:5000/password/reset-password/${User._id}/${token}`;
+
+    res.json({ message: 'Click on the link', resetPasswordLink: link })
+})
