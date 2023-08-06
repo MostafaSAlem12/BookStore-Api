@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { User } = require("../models/User")
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 /**
  * @desc Get Forgot Password
