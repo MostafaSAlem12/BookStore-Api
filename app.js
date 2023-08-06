@@ -5,6 +5,8 @@ require("dotenv").config();
 const { notFound, errHandler } = require("./middlewares/errors");
 const { setRandomFallback } = require("bcryptjs");
 const path = require("path")
+const helmet = require("helmet")
+const cors = require("cors")
 
 //connection to Database
 connectToDB();
@@ -19,6 +21,14 @@ app.use(express.static(path.join(__dirname, "images")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 app.use(logger);
+
+//Helmet 
+app.use(helmet());
+
+// Cors Policy
+app.use(cors())
+
+// set view engine
 app.set('view engine', 'ejs')
 
 
