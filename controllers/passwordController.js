@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { User } = require("../models/User")
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const nodemailer = require("nodemailer")
 
 /**
  * @desc Get Forgot Password
@@ -32,9 +33,39 @@ module.exports.sendForgotPasswordLink = asyncHandler(async (req, res) => {
 
     const link = `http://localhost:5000/password/reset-password/${user._id}/${token}`;
 
-    res.json({ message: 'Click on the link', resetPasswordLink: link })
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASS
+        }
+    })
 
-    //TODO : send email to the user 
+    const mailOptions = {
+        from: process.env.USER_EMAIL,
+        to: user.email,
+        subject: "Reset Password",
+        html: `
+        <div>
+            <h4>Click on the link below to reset your password</h4>
+            <p>${link}</p>
+        </div>`
+    }
+
+    transporter.sendMail(mailOptions, function (error, success) {
+        if (error) {
+            console.log(error)
+            res.status(500).json({ message: "something went wrong" })
+        } else {
+            console.log("email sent: " + success.response)
+            res.render('link-send')
+        }
+
+    })
+
+
+    // res.json({ message: 'Click on the link', resetPasswordLink: link })
+
 })
 
 /**
